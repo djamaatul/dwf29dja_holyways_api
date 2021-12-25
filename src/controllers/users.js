@@ -36,10 +36,9 @@ exports.login = async (req, res) => {
 				message: 'user not exist',
 			});
 		}
-
-		const isValid = bcrypt.compare(input.password, userExist.password);
-
-		const token = jwt.sign({ id: userExist.id }, process.env.SECRET_KEY);
+		console.log(input.password);
+		console.log(userExist.password);
+		const isValid = await bcrypt.compare(input.password, userExist.password);
 
 		if (!isValid) {
 			return res.status(401).send({
@@ -47,6 +46,10 @@ exports.login = async (req, res) => {
 				message: 'password is not correct',
 			});
 		}
+		console.log(isValid);
+
+		const token = jwt.sign({ id: userExist.id }, process.env.SECRET_KEY);
+
 		res.status(200).send({
 			status: 'success',
 			data: {

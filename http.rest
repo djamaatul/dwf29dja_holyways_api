@@ -13,7 +13,16 @@ POST http://localhost:3000/api/v1/register
 Content-Type: application/json
 
 {
-  "email": "dinda@gmail.com",
-  "password": "myCustomPassword",
-  "fullName": "Dinda Adinda Putri"
+  "email": "djamaatul.anbiya@gmail.com",
+  "password": "qewadsws",
+  "fullName": "dika jamaatul anbiya"
+}
+
+###
+POST http://localhost:3000/api/v1/login
+Content-Type: application/json
+
+{
+	"email" : "djamaatul.anbiya@gmail.com",
+	"password" : "qewadsws"
 }
