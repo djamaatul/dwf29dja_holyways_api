@@ -129,3 +129,47 @@ exports.register = async (req, res) => {
 		});
 	}
 };
+
+exports.getUsers = async (req, res) => {
+	try {
+		const data = await users.findAll({
+			attributes: {
+				exclude: ['password', 'createdAt', 'updatedAt'],
+			},
+		});
+		res.status(200).send({
+			status: 'success',
+			data: {
+				users: data,
+			},
+		});
+	} catch (error) {
+		res.status(500).send({
+			status: 'failed',
+			message: 'Server Error',
+		});
+	}
+};
+
+exports.deleteUser = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const data = await users.destroy({
+			where: {
+				id,
+			},
+		});
+		console.log(data);
+		res.status(200).send({
+			status: 'success',
+			data: {
+				id,
+			},
+		});
+	} catch (error) {
+		res.status(500).send({
+			status: 'failed',
+			message: 'Server Error',
+		});
+	}
+};

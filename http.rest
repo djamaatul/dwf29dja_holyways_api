@@ -1,28 +1,14 @@
-GET http://localhost:3000
-###
-POST http://localhost:3000/api/v1/login
-Content-Type: application/json
-
-{
-	"email" : "mesra@gmail.com",
-	"password" : "myPasswordCom"
-}
+GET http://localhost:3000/api/v1/users
 
 ###
 POST http://localhost:3000/api/v1/register
 Content-Type: application/json
 
 {
-  "email": "djamaatul.anbiya@gmail.com",
-  "password": "qewadsws",
-  "fullName": "dika jamaatul anbiya"
+	"fullName": "spiderman",
+	"email": "spiderman@gmail.com",
+	"password" : "123456"
 }
 
 ###
-POST http://localhost:3000/api/v1/login
-Content-Type: application/json
-
-{
-	"email" : "djamaatul.anbiya@gmail.com",
-	"password" : "qewadsws"
-}
+GET http://localhost:3000/api/v1/user/3
