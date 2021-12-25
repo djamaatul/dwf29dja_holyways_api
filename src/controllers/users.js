@@ -1,6 +1,7 @@
 const { users } = require('../../models');
 const joi = require('joi');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 exports.login = async (req, res) => {
 	const input = req.body;
@@ -36,16 +37,17 @@ exports.login = async (req, res) => {
 			});
 		}
 
-		const isValid = bcrypt.compare(input.password, userExist.password);
-
-		const token = jwt.sign({ id: userExist.id }, process.env.SECRET_KEY);
-
+		const isValid = await bcrypt.compare(input.password, userExist.password);
+		console.log(isValid);
 		if (!isValid) {
 			return res.status(401).send({
 				status: 'failed',
 				message: 'password is not correct',
 			});
 		}
+
+		const token = jwt.sign({ id: userExist.id }, process.env.SECRET_KEY);
+
 		res.status(200).send({
 			status: 'success',
 			data: {
