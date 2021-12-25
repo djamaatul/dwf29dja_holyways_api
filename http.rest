@@ -1,4 +1,4 @@
-GET http://localhost:3000/
+GET http://localhost:3000
 ###
 POST http://localhost:3000/api/v1/login
 Content-Type: application/json
@@ -6,4 +6,24 @@ Content-Type: application/json
 {
 	"email" : "mesra@gmail.com",
 	"password" : "myPasswordCom"
+}
+
+###
+POST http://localhost:3000/api/v1/register
+Content-Type: application/json
+
+{
+  "email": "dinda@gmail.com",
+  "password": "myCustomPassword",
+  "fullName": "Dinda Adinda Putri"
+}
+
+###
+POST http://localhost:3000/api/v1/register
+Content-Type: application/json
+
+{
+  "email": "dimas@gmail.com",
+  "password": "asdasdsad",
+  "fullName": "Dimas Septian Irawan"
 }
