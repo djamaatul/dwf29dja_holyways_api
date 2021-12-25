@@ -159,7 +159,12 @@ exports.deleteUser = async (req, res) => {
 				id,
 			},
 		});
-		console.log(data);
+		if (!data) {
+			return res.status(400).send({
+				status: 'failed',
+				message: 'user not exist',
+			});
+		}
 		res.status(200).send({
 			status: 'success',
 			data: {
