@@ -37,7 +37,7 @@ exports.login = async (req, res) => {
 			});
 		}
 
-		const isValid = value.password === userExist.password;
+		const isValid = bcrypt.compare(input.password, userExist.password);
 
 		const token = jwt.sign({ id: userExist.id }, process.env.SECRET_KEY);
 
