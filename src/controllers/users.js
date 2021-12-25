@@ -3,6 +3,10 @@ const joi = require('joi');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+function status_failed(message) {
+	return { status: 'failed', message };
+}
+
 exports.login = async (req, res) => {
 	const input = req.body;
 
@@ -14,10 +18,7 @@ exports.login = async (req, res) => {
 	const { error, value } = schema.validate(input);
 
 	if (error) {
-		return res.status(400).send({
-			status: 'failed',
-			message: error.details[0].message,
-		});
+		return res.status(400).send(status_failed(error.details[0].message));
 	}
 
 	try {
@@ -31,22 +32,15 @@ exports.login = async (req, res) => {
 		});
 
 		if (!userExist) {
-			return res.status(404).send({
-				status: 'failed',
-				message: 'user not exist',
-			});
+			return res.status(404).send(status_failed('user not found'));
 		}
 		console.log(input.password);
 		console.log(userExist.password);
 		const isValid = await bcrypt.compare(input.password, userExist.password);
 
 		if (!isValid) {
-			return res.status(401).send({
-				status: 'failed',
-				message: 'password is not correct',
-			});
+			return res.status(401).send(status_failed('password is not correct'));
 		}
-		console.log(isValid);
 
 		const token = jwt.sign({ id: userExist.id }, process.env.SECRET_KEY);
 
@@ -61,11 +55,7 @@ exports.login = async (req, res) => {
 			},
 		});
 	} catch (error) {
-		console.log(error);
-		res.status(500).send({
-			status: 'failed',
-			message: 'Server Error',
-		});
+		res.status(500).send(status_failed('server error'));
 	}
 };
 
@@ -123,10 +113,7 @@ exports.register = async (req, res) => {
 		});
 	} catch (error) {
 		console.log(error);
-		res.status(500).send({
-			status: 'failed',
-			message: 'Server Error',
-		});
+		res.status(500).send(status_failed('server error'));
 	}
 };
 
@@ -144,10 +131,7 @@ exports.getUsers = async (req, res) => {
 			},
 		});
 	} catch (error) {
-		res.status(500).send({
-			status: 'failed',
-			message: 'Server Error',
-		});
+		res.status(500).send(status_failed('server error'));
 	}
 };
 
@@ -160,10 +144,7 @@ exports.deleteUser = async (req, res) => {
 			},
 		});
 		if (!data) {
-			return res.status(400).send({
-				status: 'failed',
-				message: 'user not exist',
-			});
+			return res.status(400).send(status_failed('user is not exist'));
 		}
 		res.status(200).send({
 			status: 'success',
@@ -172,9 +153,6 @@ exports.deleteUser = async (req, res) => {
 			},
 		});
 	} catch (error) {
-		res.status(500).send({
-			status: 'failed',
-			message: 'Server Error',
-		});
+		res.status(500).send(status_failed('server error'));
 	}
 };
