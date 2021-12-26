@@ -24,7 +24,7 @@ module.exports = {
 					key: 'id',
 				},
 				onUpdate: 'CASCADE',
-				onDelete: 'RESTRICT',
+				onDelete: 'CASCADE',
 			},
 			idFund: {
 				type: Sequelize.INTEGER,
@@ -33,7 +33,7 @@ module.exports = {
 					key: 'id',
 				},
 				onUpdate: 'CASCADE',
-				onDelete: 'RESTRICT',
+				onDelete: 'CASCADE',
 			},
 			createdAt: {
 				allowNull: false,

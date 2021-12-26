@@ -8,6 +8,7 @@ function status_failed(message) {
 }
 
 exports.login = async (req, res) => {
+	console.log(req.body);
 	const input = req.body;
 
 	const schema = joi.object({

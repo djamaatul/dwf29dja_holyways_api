@@ -124,6 +124,7 @@ exports.addFund = async (req, res) => {
 		const newFund = await funds.create({
 			...input,
 			idUser: req.user.id,
+			thumbnail: req.file.path,
 		});
 
 		const data = await getFund(newFund.id);
@@ -231,9 +232,9 @@ exports.addDonate = async (req, res) => {
 
 		const newDonate = await donations.create({
 			donateAmount: input.donateAmount,
-			proofattachment: input.proofattachment,
 			status: 'pending',
 			idFund: id,
+			proofattachment: req.file.path,
 			idUser: req.user.id,
 		});
 		const data = await getDonate(newDonate.id);
