@@ -5,7 +5,11 @@ const port = process.env.PORT;
 const router = require('./src/routes/index');
 
 app.use(express.json());
+
 app.use('/api/v1/', router);
+
+app.use('/assets', express.static('assets'));
+
 app.use((req, res) => {
 	res.status(404).send({
 		status: 'failed',

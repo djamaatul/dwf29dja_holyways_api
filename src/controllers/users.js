@@ -34,8 +34,6 @@ exports.login = async (req, res) => {
 		if (!userExist) {
 			return res.status(404).send(status_failed('user not found'));
 		}
-		console.log(input.password);
-		console.log(userExist.password);
 		const isValid = await bcrypt.compare(input.password, userExist.password);
 
 		if (!isValid) {
