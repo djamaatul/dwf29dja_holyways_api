@@ -38,7 +38,7 @@ exports.login = async (req, res) => {
 		}
 
 		const isValid = await bcrypt.compare(input.password, userExist.password);
-		console.log(isValid);
+		// console.log(isValid);
 		if (!isValid) {
 			return res.status(401).send({
 				status: 'failed',
@@ -59,7 +59,6 @@ exports.login = async (req, res) => {
 			},
 		});
 	} catch (error) {
-		console.log(error);
 		res.status(500).send({
 			status: 'failed',
 			message: 'Server Error',
