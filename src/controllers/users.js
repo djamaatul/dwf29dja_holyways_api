@@ -16,7 +16,7 @@ exports.login = async (req, res) => {
 	if (error) {
 		return res.status(400).send({
 			status: 'failed',
-			message: error,
+			message: error.details[0].message,
 		});
 	}
 
