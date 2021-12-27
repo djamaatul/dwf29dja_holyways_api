@@ -1,0 +1,23 @@
+
+Detail Fund {
+	id Fund
+	title
+	thumbnail
+	goal
+	description
+
+donatio
+
+ID donation
+donationAmount
+status
+proofattchment
+id fund
+ID user
+
+
+user
+
+email
+passrow
+name

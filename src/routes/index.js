@@ -20,6 +20,7 @@ router.post('/login', login);
 router.post('/register', register);
 router.get('/users', getUsers);
 router.delete('/user/:id', deleteUser);
+
 router.get('/funds', getFunds);
 router.get('/fund/:id', getFund);
 router.post('/fund', auth, uploads('thumbnail'), addFund);

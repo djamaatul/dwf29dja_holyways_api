@@ -258,6 +258,7 @@ exports.updateDonate = async (req, res) => {
 		if (dataFund.data.funds.idUser !== req.user.id) {
 			return res.status(404).send(status_failed('Acces Danied'));
 		}
+
 		const dataDonate = await donations.findOne({
 			where: {
 				id: idDonate,
