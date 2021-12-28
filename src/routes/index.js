@@ -25,7 +25,7 @@ router.get('/funds', getFunds);
 router.get('/fund/:id', getFund);
 router.post('/fund', auth, uploads('thumbnail'), addFund);
 router.patch('/fund/:id', auth, updateFund);
-router.delete('/fund/:id', deleteFund);
+router.delete('/fund/:id', auth, deleteFund);
 
 router.get('/donates', getDonates);
 router.get('/donate/:id', getDonate);

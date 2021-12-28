@@ -2,13 +2,13 @@ const jwt = require('jsonwebtoken');
 
 exports.auth = (req, res, next) => {
 	const authHeader = req.header('Authorization');
-	const token = authHeader.split(' ')[1];
-	if (!authHeader || !token) {
+	if (!authHeader) {
 		return res.status(401).send({
 			status: 'failed',
 			message: 'access denied',
 		});
 	}
+	const token = authHeader.split(' ')[1];
 	try {
 		const isVerified = jwt.verify(token, process.env.SECRET_KEY);
 		req.user = isVerified;

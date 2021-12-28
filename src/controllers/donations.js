@@ -30,7 +30,7 @@ async function getFund(id) {
 		},
 	});
 	if (!dataFund) {
-		return undefined;
+		return false;
 	}
 	return {
 		status: 'success',
@@ -112,6 +112,9 @@ exports.getFund = async (req, res) => {
 	try {
 		const { id } = req.params;
 		const data = await getFund(id);
+		if (!data) {
+			return res.status(404).send(status_failed('Fund is not exist'));
+		}
 		res.status(200).send(data);
 	} catch (error) {
 		res.status(400).send(status_failed('server error'));
@@ -119,6 +122,7 @@ exports.getFund = async (req, res) => {
 };
 
 exports.addFund = async (req, res) => {
+	console.log(req.body);
 	try {
 		const input = req.body;
 		const newFund = await funds.create({
@@ -126,7 +130,6 @@ exports.addFund = async (req, res) => {
 			idUser: req.user.id,
 			thumbnail: req.file.path,
 		});
-
 		const data = await getFund(newFund.id);
 		res.status(200).send(data);
 	} catch (error) {
@@ -139,16 +142,24 @@ exports.updateFund = async (req, res) => {
 		const input = req.body;
 		const id = req.params.id;
 
-		const isExist = await funds.update(input, {
+		const isExist = await getFund(id);
+		if (!isExist) {
+			return res.status(404).send(status_failed('fund is not exist'));
+		}
+		if (isExist.data.funds.idUser !== req.user.id) {
+			return res.status(401).send({
+				status: 'failed',
+				message: 'you dont have have access to this fund',
+			});
+		}
+
+		await funds.update(input, {
 			where: {
 				id,
 			},
 		});
-		if (!isExist) {
-			return res.status(404).send(status_failed('fund is not exist'));
-		}
-		const data = await getFund(id);
-		res.status(200).send(data);
+		const newData = await getFund(id);
+		res.status(200).send(newData);
 	} catch (error) {
 		res.status(400).send(status_failed('server error'));
 	}
@@ -157,20 +168,24 @@ exports.updateFund = async (req, res) => {
 exports.deleteFund = async (req, res) => {
 	try {
 		const { id } = req.params;
-		if (req.user.id !== id) {
-			return res.status(401).send({
-				status: 'failed',
-				message: 'access denied',
+		const isExist = await getFund(id);
+		if (!isExist) {
+			return res.status(404).send({
+				status: 'error',
+				message: 'fund is not exist',
 			});
 		}
-		const fundExist = await funds.destroy({
+		if (req.user.id !== isExist.data.funds.idUser) {
+			return res.status(401).send({
+				status: 'failed',
+				message: 'you dont have access to this fund',
+			});
+		}
+		await funds.destroy({
 			where: {
 				id,
 			},
 		});
-		if (!fundExist) {
-			res.status(404).send(status_failed('fund not found'));
-		}
 		res.status(200).send({
 			status: 'succes',
 			message: `deleted fund id : ${id}`,
@@ -191,7 +206,7 @@ async function getDonate(id) {
 			},
 		});
 		if (!dataDonate) {
-			return undefined;
+			return false;
 		}
 		return dataDonate;
 	} catch (error) {
@@ -219,6 +234,9 @@ exports.getDonate = async (req, res) => {
 	try {
 		const { id } = req.params;
 		const data = await getDonate(id);
+		if (!data) {
+			return res.status(404).send(status_failed('Donations is not exist'));
+		}
 		res.status(200).send(data);
 	} catch (error) {
 		res.status(400).send(status_failed('server error'));
