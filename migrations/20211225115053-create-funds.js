@@ -17,6 +17,9 @@ module.exports = {
 			goal: {
 				type: Sequelize.INTEGER,
 			},
+			collected: {
+				type: Sequelize.INTEGER,
+			},
 			description: {
 				type: Sequelize.TEXT,
 			},

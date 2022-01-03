@@ -1,9 +1,9 @@
 const multer = require('multer');
 
-exports.uploads = (fieldName) => {
+exports.uploads = (fieldName, dir) => {
 	const storage = multer.diskStorage({
 		destination: function (req, file, cb) {
-			cb(null, 'assets');
+			cb(null, `assets/${dir}`);
 		},
 		filename: function (req, file, cb) {
 			cb(null, Date.now() + '_' + file.originalname.replace(/\s/g, ''));
@@ -22,7 +22,7 @@ exports.uploads = (fieldName) => {
 		storage,
 		fileFilter,
 		limits: {
-			fileSize: 1000000, //1 mega by byte
+			fileSize: 1000000, //10 mega by byte
 		},
 	}).single(fieldName);
 
@@ -32,14 +32,13 @@ exports.uploads = (fieldName) => {
 				return res.status(400).send(req.fileValidationError);
 			}
 			if (!req.file && !error) {
-				return res.status(400).send({
-					message: 'upload file please',
-				});
+				return next();
 			}
 			if (error) {
+				console.log(error.code);
 				if (error.code == 'LIMIT_FILE_SIZE') {
 					return res.status(400).send({
-						message: 'file must less than 1mb',
+						message: 'file must less than 10mb',
 					});
 				}
 				return res.send(error);

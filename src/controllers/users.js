@@ -1,4 +1,4 @@
-const { users } = require('../../models');
+const { users, donations } = require('../../models');
 const joi = require('joi');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -7,8 +7,49 @@ function status_failed(message) {
 	return { status: 'failed', message };
 }
 
+exports.userDonates = async (req, res) => {
+	try {
+		const dataUser = await donations.findAll({
+			where: {
+				idUser: req.user.id,
+			},
+			attributes: {
+				exclude: ['proofattachment', 'createdAt'],
+			},
+		});
+
+		res.status(200).send({
+			data: dataUser,
+		});
+	} catch (error) {
+		return res.status(500).send(status_failed(error));
+	}
+};
+
+exports.getUser = async (req, res) => {
+	try {
+		const dataUser = await users.findOne({
+			where: {
+				id: req.user.id,
+			},
+			attributes: {
+				exclude: ['createdAt', 'updatedAt', 'password'],
+			},
+		});
+		if (!dataUser) {
+			return res.status(404).send({
+				status: 'failed',
+				message: 'user not found',
+			});
+		}
+		res.status(200).send(dataUser);
+	} catch (error) {
+		return res.status(500).send(status_failed(error));
+	}
+};
+
 exports.login = async (req, res) => {
-	console.log(req.body);
+	console.log(req.user);
 	const input = req.body;
 
 	const schema = joi.object({
@@ -46,11 +87,10 @@ exports.login = async (req, res) => {
 		res.status(200).send({
 			status: 'success',
 			data: {
-				user: {
-					fullName: userExist.fullName,
-					email: userExist.email,
-					token,
-				},
+				id: userExist.id,
+				fullName: userExist.fullName,
+				email: userExist.email,
+				token,
 			},
 		});
 	} catch (error) {
@@ -67,7 +107,7 @@ exports.register = async (req, res) => {
 		fullName: joi.string().min(3).required(),
 	});
 
-	const { error, value } = schema.validate(input);
+	const { error } = schema.validate(input);
 
 	if (error) {
 		return res.status(400).send({
@@ -83,7 +123,7 @@ exports.register = async (req, res) => {
 			},
 		});
 		if (userExist.length > 0) {
-			return res.status(409).send({
+			return res.status(400).send({
 				status: 'failed',
 				message: 'user email already exist',
 			});
@@ -118,16 +158,14 @@ exports.register = async (req, res) => {
 
 exports.getUsers = async (req, res) => {
 	try {
-		const data = await users.findAll({
+		const dataUser = await users.findAll({
 			attributes: {
 				exclude: ['password', 'createdAt', 'updatedAt'],
 			},
 		});
 		res.status(200).send({
 			status: 'success',
-			data: {
-				users: data,
-			},
+			data: dataUser,
 		});
 	} catch (error) {
 		res.status(500).send(status_failed('server error'));
@@ -143,7 +181,7 @@ exports.deleteUser = async (req, res) => {
 			},
 		});
 		if (!data) {
-			return res.status(400).send(status_failed('user is not exist'));
+			return res.status(404).send(status_failed('user is not exist'));
 		}
 		res.status(200).send({
 			status: 'success',

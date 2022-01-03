@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 
 exports.auth = (req, res, next) => {
 	const authHeader = req.header('Authorization');
+	console.log(authHeader);
 	if (!authHeader) {
 		return res.status(401).send({
 			status: 'failed',
