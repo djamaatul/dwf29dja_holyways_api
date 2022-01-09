@@ -68,6 +68,7 @@ exports.getFunds = async (req, res) => {
 		res.status(400).send(status_failed('server error'));
 	}
 };
+
 exports.getFundsUser = async (req, res) => {
 	try {
 		let fundsUser = await funds.findAll({
@@ -87,6 +88,7 @@ exports.getFundsUser = async (req, res) => {
 		res.status(500).send(status_failed('server error'));
 	}
 };
+
 exports.getFund = async (req, res) => {
 	try {
 		const { id } = req.params;
@@ -297,33 +299,7 @@ exports.updateDonate = async (req, res) => {
 		if (!dataDonate) {
 			return res.status(404).send(status_failed('Donate is not exist'));
 		}
-		// if (input.status) {
-		// 	if (dataDonate.status !== input.status) {
-		// 		if (input.status == 'success') {
-		// let oldFund = await funds.findOne({
-		// 	where: {
-		// 		id: idFund,
-		// 	},
-		// });
-		// 			await funds.update(
-		// 				{
-		// 					...oldFund,
-		// 					collected: oldFund.collected + dataDonate.donateAmount,
-		// 				},
-		// {
-		// 	where: {
-		// 		id: idFund,
-		// 	},
-		// }
-		// 			);
-		// 		// }
-		// 	} else {
-		// 		res.status(200).send({
-		// 			status: 'failed',
-		// 			message: 'data has ready uptodate',
-		// 		});
-		// 	}
-		// }
+
 		if (req.file) {
 			fs.unlink('assets/invoices/' + dataDonate.proofattachment, (error) => {
 				console.log(error);

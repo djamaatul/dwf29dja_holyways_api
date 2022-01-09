@@ -22,7 +22,7 @@ exports.uploads = (fieldName, dir) => {
 		storage,
 		fileFilter,
 		limits: {
-			fileSize: 1000000, //10 mega by byte
+			fileSize: 10000000, //10 mega by byte
 		},
 	}).single(fieldName);
 

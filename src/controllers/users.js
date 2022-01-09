@@ -1,4 +1,4 @@
-const { users, donations } = require('../../models');
+const { users, donations, funds } = require('../../models');
 const joi = require('joi');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -10,6 +10,13 @@ function status_failed(message) {
 exports.userDonates = async (req, res) => {
 	try {
 		const dataUser = await donations.findAll({
+			include: {
+				model: funds,
+				as: 'funds',
+				attributes: {
+					exclude: ['createdAt', 'updatedAt', 'idFund', 'idUser'],
+				},
+			},
 			where: {
 				idUser: req.user.id,
 			},
