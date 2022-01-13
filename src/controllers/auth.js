@@ -11,7 +11,7 @@ exports.checkAuth = async (req, res) => {
 	}
 	const token = authHeader.split(' ')[1];
 	try {
-		const isVerified = jwt.verify(token, process.env.SECRET_KEY);
+		const isVerified = jwt.verify(token, '.5Ecr3tk3y!!');
 		const userExist = await users.findOne({
 			where: {
 				id: isVerified.id,

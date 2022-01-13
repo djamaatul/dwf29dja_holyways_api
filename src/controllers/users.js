@@ -89,7 +89,7 @@ exports.login = async (req, res) => {
 			return res.status(401).send(status_failed('password is not correct'));
 		}
 
-		const token = jwt.sign({ id: userExist.id }, process.env.SECRET_KEY);
+		const token = jwt.sign({ id: userExist.id }, '.5Ecr3tk3y!!');
 
 		res.status(200).send({
 			status: 'success',
@@ -146,7 +146,7 @@ exports.register = async (req, res) => {
 			fullName: input.fullName,
 		});
 
-		const token = jwt.sign({ id: newUser.dataValues.id }, process.env.SECRET_KEY);
+		const token = jwt.sign({ id: newUser.dataValues.id }, '.5Ecr3tk3y!!');
 
 		res.status(200).send({
 			status: 'success...',
