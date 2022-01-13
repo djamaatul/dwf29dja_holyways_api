@@ -2,8 +2,8 @@ const e = require('express');
 const express = require('express');
 const fs = require('fs');
 const { users, funds, donations } = require('../../models');
-const fundsUrl = 'http://localhost:5000/assets/funds/';
-const invoicesUrl = 'http://localhost:5000/assets/invoices/';
+const fundsUrl = 'https://dwf29dja-holyways.herokuapp.com/assets/funds/';
+const invoicesUrl = 'https://dwf29dja-holyways.herokuapp.com/assets/invoices/';
 function status_failed(message) {
 	return { status: 'failed', message };
 }
