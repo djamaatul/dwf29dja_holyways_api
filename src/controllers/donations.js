@@ -4,6 +4,9 @@ const fs = require('fs');
 const { users, funds, donations } = require('../../models');
 const fundsUrl = 'https://dwf29dja-holyways.herokuapp.com/assets/funds/';
 const invoicesUrl = 'https://dwf29dja-holyways.herokuapp.com/assets/invoices/';
+
+const cloudinary = require('../utils/cloudinary');
+
 function status_failed(message) {
 	return { status: 'failed', message };
 }
@@ -115,12 +118,20 @@ exports.addFund = async (req, res) => {
 	console.log(req.body);
 	try {
 		const input = req.body;
+
+		const result = await cloudinary.uploader.upload(req.file.path, {
+			folder: 'dumbsounds',
+			use_filename: true,
+			unique_filename: false,
+		});
+
 		const newFund = await funds.create({
 			...input,
 			idUser: req.user.id,
-			thumbnail: req.file.filename,
+			thumbnail: result.public_id,
 			collected: 0,
 		});
+
 		const responseData = await getFund(newFund.id);
 		res.status(200).send(responseData);
 	} catch (error) {
@@ -143,11 +154,11 @@ exports.updateFund = async (req, res) => {
 				message: 'you dont have have access to this fund',
 			});
 		}
-		if (req.file) {
-			fs.unlink('assets/funds/' + dataFund.thumbnail, (error) => {
-				console.log(error);
-			});
-		}
+		// if (req.file) {
+		// 	fs.unlink('assets/funds/' + dataFund.thumbnail, (error) => {
+		// 		console.log(error);
+		// 	});
+		// }
 		await funds.update(
 			{ ...input, thumbnail: req.file?.filename ?? dataFund.thumbnail },
 			{
