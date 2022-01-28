@@ -115,7 +115,6 @@ exports.getFund = async (req, res) => {
 };
 
 exports.addFund = async (req, res) => {
-	console.log(req.body);
 	try {
 		const input = req.body;
 
@@ -124,16 +123,24 @@ exports.addFund = async (req, res) => {
 			use_filename: true,
 			unique_filename: false,
 		});
-
 		const newFund = await funds.create({
 			...input,
 			idUser: req.user.id,
 			thumbnail: result.public_id,
 			collected: 0,
+			data: req.file.path,
 		});
 
 		const responseData = await getFund(newFund.id);
-		res.status(200).send(responseData);
+		res.status(200).send({
+			data: {
+				...input,
+				idUser: req.user.id,
+				thumbnail: result.public_id,
+				collected: 0,
+				data: req.file.path,
+			},
+		});
 	} catch (error) {
 		res.status(500).send(status_failed('server error'));
 	}
