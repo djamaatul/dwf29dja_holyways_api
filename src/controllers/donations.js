@@ -2,8 +2,10 @@ const e = require('express');
 const express = require('express');
 const fs = require('fs');
 const { users, funds, donations } = require('../../models');
-const fundsUrl = 'https://dwf29dja-holyways.herokuapp.com/assets/funds/';
-const invoicesUrl = 'https://dwf29dja-holyways.herokuapp.com/assets/invoices/';
+// const fundsUrl = 'https://dwf29dja-holyways.herokuapp.com/assets/funds/';
+const fundsUrl = process.env.FILE_PATH_FUNDS;
+// const invoicesUrl = 'https://dwf29dja-holyways.herokuapp.com/assets/invoices/';
+const invoicesUrl = process.env.FILE_PATH_INVOICES;
 
 const cloudinary = require('../utils/cloudinary');
 
@@ -119,7 +121,7 @@ exports.addFund = async (req, res) => {
 		const input = req.body;
 
 		const result = await cloudinary.uploader.upload(req.file.path, {
-			folder: 'dumbsounds',
+			folder: 'HOLYWAYS/INVOICES',
 			use_filename: true,
 			unique_filename: false,
 		});
@@ -161,11 +163,11 @@ exports.updateFund = async (req, res) => {
 				message: 'you dont have have access to this fund',
 			});
 		}
-		// if (req.file) {
-		// 	fs.unlink('assets/funds/' + dataFund.thumbnail, (error) => {
-		// 		console.log(error);
-		// 	});
-		// }
+		if (req.file) {
+			fs.unlink('assets/funds/' + dataFund.thumbnail, (error) => {
+				console.log(error);
+			});
+		}
 		await funds.update(
 			{ ...input, thumbnail: req.file?.filename ?? dataFund.thumbnail },
 			{
@@ -279,12 +281,16 @@ exports.addDonate = async (req, res) => {
 				message: 'please upload file!',
 			});
 		}
-
+		const result = await cloudinary.uploader.upload(req.file.path, {
+			folder: 'HOLYWAYS/INVOICES',
+			use_filename: true,
+			unique_filename: false,
+		});
 		const newDonate = await donations.create({
 			donateAmount: input.donateAmount,
 			status: 'pending',
 			idFund: id,
-			proofattachment: req.file.filename,
+			proofattachment: result.public_id,
 			idUser: req.user.id,
 		});
 		const data = await getDonate(newDonate.id);
